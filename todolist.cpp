@@ -119,6 +119,38 @@ public:
         }
     }
 
+    void displayTasksByHighUrgency() const {
+        if (tasks.empty()) {
+            cout << "No tasks available." << endl;
+            return;
+        }
+        vector<ToDoTask> sortedTasks = tasks;
+        sort(sortedTasks.begin(), sortedTasks.end(), [](const ToDoTask& a, const ToDoTask& b) {
+            return b.getUrgency() < a.getUrgency();
+        });
+        displayHeader();
+        for (size_t i = 0; i < sortedTasks.size(); ++i) {
+            cout << setw(6) << left << (i + 1);
+            sortedTasks[i].display();
+        }
+    }
+
+    void displayTasksByLowUrgency() const {
+        if (tasks.empty()) {
+            cout << "No tasks available." << endl;
+            return;
+        }
+        vector<ToDoTask> sortedTasks = tasks;
+        sort(sortedTasks.begin(), sortedTasks.end(), [](const ToDoTask& a, const ToDoTask& b) {
+            return a.getUrgency() < b.getUrgency();
+        });
+        displayHeader();
+        for (size_t i = 0; i < sortedTasks.size(); ++i) {
+            cout << setw(6) << left << (i + 1);
+            sortedTasks[i].display();
+        }
+    }
+
     void readCompletedTasks() const {
         bool found = false;
         displayHeader();
@@ -263,6 +295,7 @@ public:
     }
 
     void displayHeader() const {
+        cout << string(179, '=') << endl;
         cout << setw(6) << left << "Index"
              << setw(6) << left << "Urg."
              << setw(40) << left << "Title"
@@ -270,7 +303,7 @@ public:
              << setw(20) << left << "Date Created"
              << setw(20) << left << "Deadline"
              << setw(15) << left << "Status" << endl;
-        cout << string(180, '=') << endl;
+        cout << string(179, '=') << endl;
     }
 };
 
@@ -304,6 +337,8 @@ int main() {
         cout << "11. Mark Task Complete\n";
         cout << "12. Mark Task Incomplete\n";
         cout << "13. Sort Tasks by Urgency\n";
+        cout << "14. Read Tasks from Highest to Lowest Urgency\n";
+        cout << "15. Read Tasks from Lowest to Highest Urgency\n";
         cout << "Enter your choice: ";
         cin >> choice;
         system("cls");
@@ -318,8 +353,8 @@ int main() {
                 cout << "Enter title: ";
                 cin.ignore();
                 getline(cin, title);
-                while(title.size() > 20) {
-                    cout << "Title too long. Please enter a title with less than 20 characters." << endl;
+                while(title.size() > 40) {
+                    cout << "Title too long. Please enter a title with less than 40 characters." << endl;
                     cout << "Enter title: ";
                     getline(cin, title);
                 }
@@ -429,6 +464,12 @@ int main() {
                 break;
             case 0:
                 return 0;
+            case 14:
+                myToDoList.displayTasksByHighUrgency();
+                break;
+            case 15:
+                myToDoList.displayTasksByLowUrgency();
+                break;
             default:
                 cout << "Invalid choice. Please try again." << endl;
         }
